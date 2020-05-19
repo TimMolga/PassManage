@@ -1,0 +1,1 @@
+PATH = 'C:\\Users\\timot\\Documents\\PythonScripts\\password_manager\\passwords\\passwords.txt'

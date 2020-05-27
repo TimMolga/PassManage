@@ -50,7 +50,7 @@ def check_password(password):
     pwned_api_value = check_pwned_api(partial_password)
     worst_password_param = pwned_api_value[1]
     final_sum = pwned_api_value[0]
-    worst_password = reverse_sha1(partial_password,worst_password_param)
+    worst_password = reverse_sha1(partial_password, worst_password_param)
 
     if worst_password:      
         content = f'''The password beginning with \"{partial_password}\" appeared {final_sum:,} times. \nThe worst password beginning with this hash was {worst_password}.'''

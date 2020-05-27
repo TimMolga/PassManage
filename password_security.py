@@ -1,5 +1,6 @@
-import requests, hashlib, sys, re, password_writer
+import requests, hashlib, sys, re
 from bs4 import BeautifulSoup
+from password_retrieval import get_password
 from helpers import print_template
 
 #create the intial 5 hash characters for the pwned api
@@ -45,16 +46,19 @@ def reverse_sha1(partial_hash, remainder_hash):
         return False
 
 # run functions and print output
-def check_password(password):
-    partial_password = hash_password(password)
-    pwned_api_value = check_pwned_api(partial_password)
-    worst_password_param = pwned_api_value[1]
-    final_sum = pwned_api_value[0]
-    worst_password = reverse_sha1(partial_password, worst_password_param)
+def check_password_security(account):
+    password = get_password(account, prnt=False)
+    if password:
+        partial_password = hash_password(password)
+        pwned_api_value = check_pwned_api(partial_password)
+        worst_password_param = pwned_api_value[1]
+        final_sum = pwned_api_value[0]
+        worst_password = reverse_sha1(partial_password, worst_password_param)
 
-    if worst_password:      
-        content = f'''The password beginning with \"{partial_password}\" appeared {final_sum:,} times. \nThe worst password beginning with this hash was {worst_password}.'''
-        print_template(content)
-    else:
-        content = f'''The password beginning with \"{partial_password}\" appeared {final_sum:,} times. \nThe worst password beginning with this hash was unable to be reversed.'''
-        print_template(content)
+        if worst_password:      
+            content = f'''The password beginning with \"{partial_password}\" appeared {final_sum:,} times. \nThe worst password beginning with this hash was {worst_password}.'''
+            print_template(content)
+        else:
+            content = f'''The password beginning with \"{partial_password}\" appeared {final_sum:,} times. \nThe worst password beginning with this hash was unable to be reversed.'''
+            print_template(content)
+

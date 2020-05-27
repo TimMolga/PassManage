@@ -1,6 +1,0 @@
-
--> Refactor Pwned.py.
-
--> Encrypt passwords
-	->encrypt individual passwords
-	->use masterpassword to further encrypt passwords

@@ -15,4 +15,3 @@ if __name__ == "__main__":
         check_password_security(account)
     else:
         print_template('Invalid command. Try again.')
-

@@ -3,13 +3,29 @@ from bs4 import BeautifulSoup
 from password_retrieval import get_password
 from helpers import print_template
 
-#create the intial 5 hash characters for the pwned api
 def hash_password(password_to_hash):
+    """
+    Create the intial 5 hash characters for the PWNED API.
+
+        Parameters:
+            password_to_hash (string): Password to transform into a hash.
+
+        Returns:
+            hash_password (list): Hashed password from PWNED.
+    """
     hash_password = hashlib.sha1(str(password_to_hash).encode('utf-8')).hexdigest()
     return hash_password[0:5]
 
-#check the hash value on pwned api, provide a final count as well as the worst password hash value
 def check_pwned_api(password_to_check):
+    """
+    Check the hash value on PWNED API, sum of worst passwords and the worst password hash value.
+
+        Parameters:
+            password_to_check (string): Hashed password to check on the PWNED API.
+
+        Returns:
+            [] (list): Number of worst passwords based on hash, and worst password hash value.
+    """
     #check api and get text response
     pwned_url = f"https://api.pwnedpasswords.com/range/{password_to_check}"
     pwned_response = requests.get(pwned_url)
@@ -24,10 +40,20 @@ def check_pwned_api(password_to_check):
     #get hash value of worst password
     worst_password_count = max(number_count)
     worst_password_index = number_count.index(worst_password_count)
+
     return (final_sum, (lines[worst_password_index]).split(':')[0])
 
-#reverse the sha1 to find the most 
 def reverse_sha1(partial_hash, remainder_hash):
+    """
+    Reverse the sha1 to find the worst password with this hash.
+
+        Parameters:
+            partial_hash (string): Partial hash to combine with remainder hash to reverse hash.
+            remainder_hash (string): Remainder hash to combine with partial hash to reverse hash.
+
+        Returns:
+            password (string): Worst password based on hash.
+    """
     #format parameters and get site details
     params = {
         "hash" : partial_hash + remainder_hash
@@ -47,6 +73,15 @@ def reverse_sha1(partial_hash, remainder_hash):
 
 # run functions and print output
 def check_password_security(account):
+    """
+    Run functions and print output.
+
+        Parameters:
+        account (string): Account password to check.
+
+        Returns:
+            None.
+    """
     password = get_password(account, prnt=False)
     if password:
         partial_password = hash_password(password)
